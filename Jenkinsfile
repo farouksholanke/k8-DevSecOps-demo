@@ -33,17 +33,16 @@ pipeline {
         }
       }
 
-      stage('SonarQube - SAST') {
-        steps {
-           withSonarQubeEnv('SonarQube') {
-              sh "mvn sonar:sonar \
-                                    -Dsonar.projectKey=numeric-application \
-                                    -Dsonar.host.url=http://dev-secops-demo.eastus.cloudapp.azure.com:9000 \
-                                    -Dsonar.login=sqp_d478f69c72233f121aedc6cdadb3d3975bd5f046"
-
-
-           }
-
+      stage('SonarQube Analysis') {
+        withSonarQubeEnv('SonarQube') {
+          withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
+            sh """
+                mvn sonar:sonar \
+                    -Dsonar.projectKey=numeric-application \
+                    -Dsonar.host.url=http://dev-secops-demo.eastus.cloudapp.azure.com:9000 \
+                    -Dsonar.login=${SONAR_AUTH_TOKEN}
+            """
+          }
         }
       }
 

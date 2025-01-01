@@ -34,7 +34,8 @@ pipeline {
       }
 
       stage('SonarQube Analysis') {
-        withSonarQubeEnv('SonarQube') {
+        steps {
+          withSonarQubeEnv('SonarQube') {
           withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
             sh """
                 mvn sonar:sonar \
@@ -43,6 +44,7 @@ pipeline {
                     -Dsonar.login=${SONAR_AUTH_TOKEN}
             """
           }
+        }
         }
       }
 

@@ -36,15 +36,21 @@ pipeline {
       stage('SonarQube Analysis') {
         steps {
           withSonarQubeEnv('SonarQube') {
-          withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
-            sh """
-                mvn sonar:sonar \
-                    -Dsonar.projectKey=numeric-application \
-                    -Dsonar.host.url=http://dev-secops-demo.eastus.cloudapp.azure.com:9000 \
-                    -Dsonar.login=${SONAR_AUTH_TOKEN}
-            """
+            withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
+              sh """
+                  mvn sonar:sonar \
+                      -Dsonar.projectKey=numeric-application \
+                      -Dsonar.host.url=http://dev-secops-demo.eastus.cloudapp.azure.com:9000 \
+                      -Dsonar.login=${SONAR_AUTH_TOKEN}
+              """
+            }
           }
-        }
+          timeout(time: 2, unit: 'MINUTES') {
+            script {
+              waitForQualityGate abortPipeline: true
+            }
+
+          }
         }
       }
 

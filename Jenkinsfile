@@ -33,7 +33,7 @@ pipeline {
         }
       }
 
-      stage('SonarQube Analysis') {
+      stage('SonarQube -SAST') {
         steps {
           withSonarQubeEnv('SonarQube') {
             withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -50,6 +50,17 @@ pipeline {
               waitForQualityGate abortPipeline: true
             }
 
+          }
+        }
+      }
+
+      stage('Vulnerability Scan - Docker') {
+        steps {
+          sh "mvn dependency-check:check"
+        }
+        post {
+          always {
+            dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
           }
         }
       }

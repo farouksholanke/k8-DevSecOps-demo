@@ -46,7 +46,6 @@ pipeline {
             script {
               waitForQualityGate abortPipeline: true
             }
-
           }
         }
       }
@@ -57,7 +56,7 @@ pipeline {
             "Dependency Scan": {
               sh "mvn dependency-check:check"
             },
-            "Trivy Scan":{
+            "Trivy Scan": {
               sh "bash trivy-docker-image-scan.sh"
             },
             "OPA Conftest": {
@@ -67,13 +66,13 @@ pipeline {
         }
       }
 
-      stage('Docker Build and Push'){
+      stage('Docker Build and Push') {
         steps {
          withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
            sh 'printenv'
            sh 'sudo docker build -t farouksholanke/numeric-app:""$GIT_COMMIT"" .'
            sh 'docker push farouksholanke/numeric-app:""$GIT_COMMIT""'
-        }
+         }
        }
       }
 
@@ -81,7 +80,6 @@ pipeline {
         steps {
           sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
         }
-
       }
 
        stage('K8S Deployment - DEV') {
@@ -100,16 +98,15 @@ pipeline {
             )
           }
        }
+  }
 
-     
-
-    post {
-      always {
-        junit 'target/surefire-reports/*.xml'
-        jacoco execPattern: 'target/jacoco.exec'
-        pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-        dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-      }
+  post {
+    always {
+      junit 'target/surefire-reports/*.xml'
+      jacoco execPattern: 'target/jacoco.exec'
+      pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+      dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
     }
   }
 }
+

@@ -28,4 +28,4 @@ else
 fi;
 
 # Generate ConfigFile
-# docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-weekly zap-api-scan.py -t http://devsecops-demo.eastus.cloudapp.azure.com:31933/v3/api-docs -f openapi -g gen_file
+# docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-weekly zap-api-scan.py -t http://dev-secops-demo.eastus.cloudapp.azure.com:32032/v3/api-docs -f openapi -g gen_file

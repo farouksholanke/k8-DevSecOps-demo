@@ -10,7 +10,7 @@ echo $(id -u):$(id -g)
 
 # comment above cmd and uncomment below lines to run with CUSTOM RULES
 docker pull zaproxy/zap-weekly
-docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-weekly zap-api-scan.py -t $applicationURL:$PORT/v3/api-docs -f openapi -c zap_rules -r zap_report.html
+docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-weekly zap-api-scan.py -t http://$applicationURL:$PORT/v3/api-docs -f openapi -c zap_rules -r zap_report.html
 
 exit_code=$?
 

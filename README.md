@@ -1,5 +1,5 @@
 # DevSecOps Pipeline Project 🚀🔒✨
----
+
 
 ## Overview
 This project demonstrates the integration of security into every stage of the DevOps pipeline, transitioning into a comprehensive DevSecOps workflow. The purpose is to enhance the security of the software delivery lifecycle while maintaining efficiency and automation.
